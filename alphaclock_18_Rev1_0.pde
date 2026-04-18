@@ -233,7 +233,36 @@ void DisplayWordSequence (char WordIn[], unsigned int durationMillis)
   OptionNameSequence++;
 }
 
+void ScrollWordSequence(char WordIn[], unsigned int durationMillis)
+{
+    char disp[strlen(WordIn) + 8];
+    for (int i = 0; i < strlen(WordIn) + 8; i++) 
+    {
+      if(i < 4 || i >= (strlen(WordIn) + 4))
+      {
+        disp[i] = ' ';  
+      }
+      else
+      {
+        disp[i] = WordIn[i-4];
+      }
+    }
+    for (int i = 0; i < strlen(WordIn) + 5; i++) 
+    {
+      char chunk[5] = {disp[i],disp[i + 1],disp[i + 2],disp[i + 3],disp[i + 4]};
+      DisplayWordSequence(chunk, durationMillis);
+      ClearCurrentWord();
+    }
+}
 
+void ClearCurrentWord()
+{
+  while (  millis() < WordStopTime)
+  {    
+    refreshDisplay();
+    DisplayWordMode = 0;
+  }
+}
 
 #define EELength 8
 byte EEvalues[EELength];
@@ -301,7 +330,9 @@ boolean getPCtime() {
      DisplayWordSequence("FLUSH",500);     //TODO: Remove this debug message
      }
      */
-
+    /* You must send the "header byte" 0xFF to start serial comms with the firmware.
+       NOTE: 'ÿ' does not work via the serial monitor, you must send hex codes.
+       I used a C# console application to send bytes from my USB port to an FTDI Friend that I bought from Adafruit. */
     if( Serial.read() == TIME_HEADER) { 
 
       //   DisplayWordSequence("RECV ",100);  //TODO: Remove this debug message
@@ -328,7 +359,12 @@ boolean getPCtime() {
         }
 
       }
-
+      
+      /* Then you must send the command indicator.
+         The new command indicator I have set up for this FW version is A1 as there is already an A0 command
+         The header byte and command will be sent in the same packet - so far our packet looks like this:
+         Hex:
+         FF-41-31 */
       else if( charTemp == 'A' ){  
         if( charTemp2 == '0' )  {
 
@@ -365,6 +401,42 @@ boolean getPCtime() {
           }
           SerialDisplayMode  = 1;
           // Serial.println("Writing Text!");
+        }
+        /* This is where the new command logic is at.
+           You will need to have your program specify the length of the character array (char[]) you are passing so that you don't receive bogus output. 
+           Then, after you specify the length (in hex) you will start your display string.
+           As an example, here is a command to display "HELLO WORLD" as a scrolling marquee:
+           FF-41-31-0B-48-45-4C-4C-4F-20-57-4F-52-4C-44 
+                    ^ This is the length of "HELLO WORLD" which is 11 characters long (HELLO = 5) (WORLD = 5) plus 1 SPACE equals 11 so that's 0B in Hexadecimal!
+        */
+        else if( charTemp2 == '1' )  {
+          int length = Serial.read();
+          //  DisplayWordSequence("RECA0",500);  //TODO: Remove this debug message
+          // ASCII display mode, all chars will be displayed as a scrolling marquee.
+          char WordIn[length + 1];        // adjusts size based on input length value from Serial.read() (adding one to the length so we have space for the null terminator at the end)
+          int idx = 0;
+
+          char a = '+';
+          // Read until no more characters are coming in
+          while  (idx < length) 
+          {
+                a = Serial.read();
+ 
+                if (idx < length) {
+                    WordIn[idx] = a;
+
+                }
+            
+                idx++;
+                delay(2);  // small debounce for serial stream
+          }
+          //Add null terminator to avoid garbage at the end of the output.
+          WordIn[length] = '\0';
+
+          ScrollWordSequence(WordIn, 333);
+
+
+        
         }
       }
       else if( charTemp == 'M' ){ 
@@ -1105,28 +1177,14 @@ void setup()                    // run once, when the sketch starts
 
   PORTA |= _BV(6); // Blank LED driver
 
-  DisplayWordSequence("HELLO",1000); 
-
-  while (  millis() < WordStopTime){    
-    refreshDisplay ();
-    DisplayWordMode = 0;
-  }
-
-  delay (10);
-
-  DisplayWordSequence("WORLD",2000);
-
-  while (  millis() < WordStopTime){    
-    refreshDisplay ();
-    DisplayWordMode = 0;
-  }
+  ScrollWordSequence("HELLO WORLD",333);
 
   delay (250);
 
 
   VCRmode = 1;  // Time is NOT yet set.
 
-  Serial.begin(19200);
+  Serial.begin(9600);
   DateTime.sync(0); 
 
   Wire.begin();
