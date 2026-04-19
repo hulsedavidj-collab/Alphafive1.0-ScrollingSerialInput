@@ -1,3 +1,6 @@
+## Alpha Clock Five
+<img src="https://github.com/hulsedavidj-collab/Alphafive1.0-ScrollingSerialInput/blob/main/clock.jpg?raw=true" alt="Alpha Clock Five Red Edition" width="400" height="300"/>
+
 ## Commit `9c90e44`
 All the updates I made to the v1.0 firmware are included in this commit.
 
@@ -21,5 +24,3 @@ https://www.amazon.com/DSD-TECH-CC2640R2F-Bluetooth-Compatible/dp/B07N1FWQYP/ref
 I did not create the Alpha Clock Five or the firmware, I am just a contributor. 
 
 Windell Oskay from Evil Mad Scientist is the creator. https://www.evilmadscientist.com/
-
-<img src="https://github.com/hulsedavidj-collab/Alphafive1.0-ScrollingSerialInput/blob/main/clock.jpg?raw=true" alt="Alpha Clock Five Red Edition" width="400" height="300"/>
