@@ -22,4 +22,4 @@ I did not create the Alpha Clock Five or the firmware, I am just a contributor.
 
 Windell Oskay from Evil Mad Scientist is the creator. https://www.evilmadscientist.com/
 
-<img src="https://cdn.evilmadscientist.com/catalog/emskits/alphafive/bundle/imglrg/1@2x.jpg" alt="Alpha Clock Five Red Edition"/>
+<img src="https://github.com/hulsedavidj-collab/Alphafive1.0-ScrollingSerialInput/blob/main/clock.jpg?raw=true" alt="Alpha Clock Five Red Edition" width="400" height="300"/>
