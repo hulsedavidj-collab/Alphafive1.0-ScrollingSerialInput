@@ -1,10 +1,15 @@
-## Commit 9c90e44
+## Commit `9c90e44`
 All the updates I made to the v1.0 firmware are included in this commit.
 
 https://github.com/hulsedavidj-collab/Alphafive1.0-ScrollingSerialInput/commit/9c90e44d23f6f822db61474b0ab1880920b401e9
 
+## Commit `ac4f67e`
+This commit contains the C# program I used to test the commands I implemented. Once you build the .exe you can pass command line arguments in the console and if you have things configured correctly you will see the clock LEDs display your input as a scrolling marquee.
+
+https://github.com/hulsedavidj-collab/Alphafive1.0-ScrollingSerialInput/blob/ac4f67e9cdf8ae092aa186d5d95765ea75c6e5a6/SerialWriteToAlphafive/Program.cs
+
 ## Notes
-I updated the baud rate on line 1187.
+I updated the baud rate on line 1187 of the `alphaclock_18_Rev1_0.pde` file
 
 You may need to change the baud rate back to 19200.
 
